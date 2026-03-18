@@ -4,7 +4,9 @@ A personal study dashboard. Pure black minimal design.
 Built with Electron — runs as a real desktop application.
 
 ---
+## Preview
 
+![Study Desk Dashboard](assets/preview.png)
 ## Project Structure
 
 ```
