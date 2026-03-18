@@ -22,7 +22,6 @@ studydesk/
 │   │   └── animations.css  CSS animations
 │   └── js/
 │       ├── store.js     Data layer (localStorage)
-│       ├── spotify.js   Spotify Web API + OAuth
 │       ├── session.js   Study session timer
 │       ├── render.js    All DOM rendering
 │       └── app.js       Event handlers + init
@@ -43,24 +42,7 @@ npm install
 
 ---
 
-## Step 2 — Set up Spotify (required for music)
-
-1. Go to https://developer.spotify.com/dashboard
-2. Log in and click "Create App"
-3. Fill in:
-   - App name: Study Desk
-   - Redirect URI: http://localhost:8888/callback  (click Add)
-   - Check "Web API" and "Web Playback SDK"
-4. Click Settings — copy your Client ID and Client Secret
-5. Open main.js and replace:
-   ```js
-   const SPOTIFY_CLIENT_ID     = 'YOUR_SPOTIFY_CLIENT_ID';
-   const SPOTIFY_CLIENT_SECRET = 'YOUR_SPOTIFY_CLIENT_SECRET';
-   ```
-
----
-
-## Step 3 — Run in development
+## Step 2 — Run in development
 
 ```cmd
 cd H:\studydesk
@@ -71,13 +53,12 @@ The app window opens. You can now:
 - Add subjects and topics
 - Tick off syllabus topics
 - Add lecture YouTube links and watch them inside the app
-- Connect Spotify and control playback
 - Start/end study sessions
 - Track homework deadlines
 
 ---
 
-## Step 4 — Build an installable .exe (Windows)
+## Step 3 — Build an installable .exe (Windows)
 
 ```cmd
 cd H:\studydesk
@@ -95,7 +76,7 @@ npm run build:linux  # Linux AppImage
 
 ---
 
-## Step 5 — Auto-launch on Windows startup
+## Step 4 — Auto-launch on Windows startup
 
 After installing the built .exe, go to:
 Windows Settings > Apps > Startup
@@ -110,12 +91,11 @@ reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "StudyDesk" /t R
 
 ## Features
 
-- Dashboard with syllabus ring, now playing, today stats, deadlines
+- Dashboard with syllabus ring, today stats, deadlines
 - Syllabus tracker: subjects, topics as chips, per-subject progress bar
-- Lectures: grid with YouTube thumbnails, in-app video player (webview)
+- Lectures: grid with YouTube thumbnails, in-app video player
 - Tasks: homework with due dates, overdue alerts
 - Focus: daily checklist, auto-clears each morning
-- Music: Spotify OAuth login, full playback controls, recently played
 - Session timer: tracks study time per day, topics done, tasks done
 - Study streak counter
 - Quick notes (auto-saves)
@@ -126,7 +106,7 @@ reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "StudyDesk" /t R
 ## Data
 
 All data stored in Electron's localStorage (persists between sessions).
-Location: C:\Users\<you>\AppData\Roaming\study-desk\
+Location: `C:\Users\<you>\AppData\Roaming\study-desk\`
 
 ---
 
@@ -134,10 +114,6 @@ Location: C:\Users\<you>\AppData\Roaming\study-desk\
 
 **"electron is not recognized"**
 Run `npm install` first.
-
-**Spotify auth window doesn't open**
-Make sure your redirect URI in the Spotify dashboard is exactly:
-`http://localhost:8888/callback`
 
 **Video not loading**
 Only YouTube links are embedded. Other URLs open externally.
