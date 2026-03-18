@@ -6,7 +6,7 @@ Built with Electron — runs as a real desktop application.
 ---
 ## Preview
 
-![Study Desk Dashboard](assets/preview.png)
+![Study Desk Dashboard](preview.png)
 ## Project Structure
 
 ```
