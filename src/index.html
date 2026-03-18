@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Study Desk</title>
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <div class="titlebar" id="titlebar">
+    <div class="titlebar-drag">Study Desk &mdash; Govind Gupta</div>
+    <div class="titlebar-controls">
+      <button class="tb-btn" id="tbMinimize"></button>
+      <button class="tb-btn" id="tbMaximize"></button>
+      <button class="tb-btn tb-close" id="tbClose"></button>
+    </div>
+  </div>
+
+  <div class="app-shell">
+
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-mark">G</span>
+        <span class="logo-text">Study Desk</span>
+      </div>
+      <ul class="nav-list">
+        <li class="nav-item active" data-view="dashboard"><span class="nav-icon">&#9632;</span><span class="nav-label">Dashboard</span></li>
+        <li class="nav-item" data-view="syllabus"><span class="nav-icon">&#9650;</span><span class="nav-label">Syllabus</span></li>
+        <li class="nav-item" data-view="lectures"><span class="nav-icon">&#9654;</span><span class="nav-label">Lectures</span></li>
+        <li class="nav-item" data-view="homework"><span class="nav-icon">&#9670;</span><span class="nav-label">Tasks</span></li>
+        <li class="nav-item" data-view="focus"><span class="nav-icon">&#9711;</span><span class="nav-label">Focus</span></li>
+      </ul>
+      <div class="sidebar-bottom">
+        <button class="fullscreen-toggle" id="fullscreenBtn">
+          <span style="font-size:0.9rem">&#9744;</span><span>Fullscreen</span>
+        </button>
+        <div class="made-by">
+          <div class="made-by-name">Govind Gupta</div>
+          <div class="made-by-age">17 years old &mdash; student</div>
+          <a class="made-by-email" href="mailto:govindgupta200f@gmail.com">govindgupta200f@gmail.com</a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="view-container" id="viewContainer">
+
+      <!-- DASHBOARD -->
+      <section class="view active" id="view-dashboard">
+        <div class="dash-top">
+          <div>
+            <div class="dash-greeting" id="dashGreeting">Good evening.</div>
+            <div class="dash-date-line" id="dashDate"></div>
+          </div>
+          <div class="header-meta">
+            <div class="streak-pill" id="streakPill"><span id="streakNum">0</span> day streak</div>
+            <div class="clock-display" id="clock"></div>
+          </div>
+        </div>
+
+        <div class="dash-grid">
+
+          <div class="dash-card dash-progress">
+            <div class="card-label">Overall Syllabus</div>
+            <div class="big-progress-ring">
+              <svg viewBox="0 0 120 120" class="ring-svg">
+                <circle class="ring-track" cx="60" cy="60" r="50"/>
+                <circle class="ring-fill" cx="60" cy="60" r="50" id="ringFill"/>
+              </svg>
+              <div class="ring-center">
+                <span class="ring-pct" id="ringPct">0%</span>
+                <span class="ring-sub">covered</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="dash-card dash-stats">
+            <div class="card-label">Today's Session</div>
+            <div class="stats-grid">
+              <div class="stat-item">
+                <span class="stat-val" id="statStudyTime">0m</span>
+                <span class="stat-key">studied</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-val" id="statTopicsDone">0</span>
+                <span class="stat-key">chapters</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-val" id="statTasksDone">0</span>
+                <span class="stat-key">tasks</span>
+              </div>
+            </div>
+            <div class="session-bar-wrap"><div class="session-bar-fill" id="sessionBar"></div></div>
+            <p class="session-label" id="sessionLabel">No active session</p>
+            <button class="btn-session" id="sessionBtn" onclick="toggleSession()">Start Session</button>
+          </div>
+
+          <div class="dash-card dash-focus-card">
+            <div class="card-row">
+              <div class="card-label">Today's Focus</div>
+              <button class="btn-add" onclick="openModal('focusModal')">+ add</button>
+            </div>
+            <div id="dashFocusList" class="focus-list"></div>
+          </div>
+
+          <div class="dash-card dash-recent-lec">
+            <div class="card-row">
+              <div class="card-label">Continue Watching</div>
+              <button class="btn-add" onclick="switchView('lectures')">all lectures</button>
+            </div>
+            <div id="dashRecentLectures" class="recent-lec-grid"></div>
+          </div>
+
+          <div class="dash-card dash-deadlines">
+            <div class="card-row">
+              <div class="card-label">Upcoming Deadlines</div>
+              <button class="btn-add" onclick="switchView('homework')">view all</button>
+            </div>
+            <div id="dashDeadlines"></div>
+          </div>
+
+          <div class="dash-card dash-photo-card">
+            <div class="photo-carousel" id="photoCarousel">
+              <div class="photo-drop-zone" id="photoDropZone">
+                <div class="photo-drop-icon">&#128444;</div>
+                <div class="photo-drop-text">Drop your photos here<br>or click to browse</div>
+                <button class="photo-drop-btn" onclick="document.getElementById('photoFileInput').click()">Browse files</button>
+              </div>
+              <div id="photoSlides"></div>
+              <div class="photo-carousel-dots" id="photoDots"></div>
+              <span class="photo-count-badge" id="photoCountBadge"></span>
+              <button class="photo-clear-btn" onclick="clearPhotos()">clear all</button>
+            </div>
+            <input type="file" id="photoFileInput" accept="image/*" multiple style="display:none" />
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SYLLABUS -->
+      <section class="view" id="view-syllabus">
+        <div class="view-header">
+          <div><p class="view-eyebrow">Progress Tracker</p><h1 class="view-title">Syllabus</h1></div>
+          <button class="btn-primary" onclick="openModal('subjectModal')">+ New Subject</button>
+        </div>
+        <div id="syllabusGrid" class="syllabus-grid"></div>
+      </section>
+
+      <!-- LECTURES -->
+      <section class="view" id="view-lectures">
+        <div class="view-header">
+          <div><p class="view-eyebrow">Video Library</p><h1 class="view-title">Lectures</h1></div>
+          <button class="btn-primary" onclick="openModal('lectureModal')">+ Add Lecture</button>
+        </div>
+        <div class="lecture-add-bar">
+          <input type="text" id="quickLecTitle" placeholder="Lecture title..." class="lecture-bar-input" />
+          <input type="url"  id="quickLecUrl"   placeholder="YouTube URL..." class="lecture-bar-input" />
+          <input type="text" id="quickLecTag"   placeholder="Subject tag..." class="lecture-bar-input lecture-bar-tag" />
+          <button class="btn-primary" onclick="handleQuickAddLecture()">Save</button>
+        </div>
+        <div id="lecturesGrid" class="lectures-grid"></div>
+      </section>
+
+      <!-- HOMEWORK -->
+      <section class="view" id="view-homework">
+        <div class="view-header">
+          <div><p class="view-eyebrow">Assignments & Deadlines</p><h1 class="view-title">Tasks</h1></div>
+          <button class="btn-primary" onclick="openModal('homeworkModal')">+ New Task</button>
+        </div>
+        <div id="homeworkList" class="homework-list"></div>
+      </section>
+
+      <!-- FOCUS -->
+      <section class="view" id="view-focus">
+        <div class="view-header">
+          <div><p class="view-eyebrow">Daily Checklist</p><h1 class="view-title">Focus</h1></div>
+          <button class="btn-primary" onclick="openModal('focusModal')">+ Add</button>
+        </div>
+        <div id="focusList" class="focus-full-list"></div>
+        <div class="notes-section">
+          <div class="card-row" style="margin-bottom:12px">
+            <div class="card-label">Quick Notes</div>
+            <span class="notes-saved-indicator" id="notesSaved"></span>
+          </div>
+          <textarea class="notes-area" id="notesArea" placeholder="Jot down anything — formulas, ideas, reminders..."></textarea>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODALS -->
+  <div class="modal-backdrop" id="subjectModal">
+    <div class="modal">
+      <h3 class="modal-title">New Subject</h3>
+      <div class="field"><label>Name</label><input type="text" id="sName" placeholder="e.g. Physics" /></div>
+      <div class="field"><label>Icon (single letter)</label><input type="text" id="sIcon" placeholder="P" maxlength="2" /></div>
+      <div class="field"><label>Color</label><div class="color-swatches" id="colorSwatches"></div></div>
+      <div class="modal-actions">
+        <button class="btn-ghost" onclick="closeModal('subjectModal')">Cancel</button>
+        <button class="btn-primary" onclick="handleAddSubject()">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="topicsModal">
+    <div class="modal modal-wide">
+      <h3 class="modal-title" id="topicsModalTitle">Manage Chapters</h3>
+      <div id="topicsModalList" class="topics-modal-list"></div>
+      <div class="inline-add">
+        <input type="text" id="newTopicInput" placeholder="Add a chapter..." />
+        <button class="btn-primary" onclick="handleAddTopic()">Add</button>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-ghost" onclick="closeModal('topicsModal')">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="lectureModal">
+    <div class="modal">
+      <h3 class="modal-title">Add Lecture</h3>
+      <div class="field"><label>Title</label><input type="text" id="lTitle" placeholder="Electrostatics Part 2" /></div>
+      <div class="field"><label>YouTube URL</label><input type="url" id="lUrl" placeholder="https://youtube.com/watch?v=..." /></div>
+      <div class="field"><label>Subject Tag</label><input type="text" id="lTag" placeholder="Physics" /></div>
+      <div class="modal-actions">
+        <button class="btn-ghost" onclick="closeModal('lectureModal')">Cancel</button>
+        <button class="btn-primary" onclick="handleAddLecture()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="homeworkModal">
+    <div class="modal">
+      <h3 class="modal-title">New Task</h3>
+      <div class="field"><label>Description</label><input type="text" id="hwDesc" placeholder="Solve exercise 4.3" /></div>
+      <div class="field"><label>Subject</label><input type="text" id="hwSub" placeholder="Maths" /></div>
+      <div class="field"><label>Due Date</label><input type="date" id="hwDue" /></div>
+      <div class="modal-actions">
+        <button class="btn-ghost" onclick="closeModal('homeworkModal')">Cancel</button>
+        <button class="btn-primary" onclick="handleAddHomework()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="focusModal">
+    <div class="modal">
+      <h3 class="modal-title">Add Focus Item</h3>
+      <div class="field"><label>What to study today?</label><input type="text" id="focusInput" placeholder="Chapter 7 Thermodynamics" /></div>
+      <div class="modal-actions">
+        <button class="btn-ghost" onclick="closeModal('focusModal')">Cancel</button>
+        <button class="btn-primary" onclick="handleAddFocus()">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/store.js"></script>
+  <script src="js/spotify.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

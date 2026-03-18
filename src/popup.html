@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;" />
+  <title>Study Desk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 380px; height: 480px;
+      background: #000;
+      color: #f0f0f0;
+      font-family: 'Instrument Sans', sans-serif;
+      overflow: hidden;
+      border-radius: 14px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .popup {
+      width: 380px; height: 480px;
+      background: #0a0a0a;
+      border: 1px solid #222;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: slideUp 0.4s cubic-bezier(0.34,1.3,0.64,1) both;
+      box-shadow: 0 -4px 40px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.04);
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Header */
+    .popup-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid #1a1a1a;
+      -webkit-app-region: drag;
+    }
+    .popup-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-mark {
+      width: 24px; height: 24px;
+      background: #fff;
+      color: #000;
+      font-family: 'DM Serif Display', serif;
+      font-size: 0.85rem;
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 10px rgba(255,255,255,0.15);
+    }
+    .brand-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 0.9rem;
+      color: #e8e8e8;
+      letter-spacing: -0.01em;
+    }
+    .popup-close {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: #1c1c1c;
+      border: none;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: #666;
+      font-size: 0.7rem;
+      transition: background 0.12s, color 0.12s;
+      -webkit-app-region: no-drag;
+    }
+    .popup-close:hover { background: #ff5f57; color: #fff; }
+
+    /* Greeting */
+    .popup-greeting {
+      padding: 16px 18px 10px;
+      border-bottom: 1px solid #141414;
+    }
+    .greeting-text {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 3px;
+      text-shadow: 0 0 30px rgba(255,255,255,0.1);
+    }
+    .greeting-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      color: #555;
+      letter-spacing: 0.1em;
+    }
+
+    /* Streak */
+    .streak-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-bottom: 1px solid #141414;
+      background: #0e0e0e;
+    }
+    .streak-val {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      color: #fbb040;
+      text-shadow: 0 0 12px rgba(251,176,64,0.4);
+    }
+    .streak-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      color: #555;
+      letter-spacing: 0.08em;
+      flex: 1;
+    }
+    .progress-mini {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: #888;
+      letter-spacing: 0.06em;
+    }
+
+    /* Sections */
+    .popup-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0;
+    }
+    .popup-body::-webkit-scrollbar { width: 3px; }
+    .popup-body::-webkit-scrollbar-thumb { background: #222; }
+
+    .section {
+      padding: 12px 18px;
+      border-bottom: 1px solid #141414;
+    }
+    .section:last-child { border-bottom: none; }
+    .section-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #444;
+      margin-bottom: 8px;
+    }
+
+    /* Focus items */
+    .focus-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 0;
+      font-size: 0.82rem;
+      color: #c0c0c0;
+      border-bottom: 1px solid #141414;
+    }
+    .focus-row:last-child { border-bottom: none; }
+    .focus-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: #333;
+      flex-shrink: 0;
+    }
+    .focus-row.done .focus-dot { background: #fff; box-shadow: 0 0 4px rgba(255,255,255,0.4); }
+    .focus-row.done span { text-decoration: line-through; opacity: 0.4; }
+
+    /* Deadline items */
+    .deadline-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px 0;
+      font-size: 0.8rem;
+      border-bottom: 1px solid #141414;
+    }
+    .deadline-row:last-child { border-bottom: none; }
+    .deadline-name { color: #c0c0c0; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 8px; }
+    .deadline-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      padding: 2px 6px;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
+    .badge-urgent { background: rgba(255,112,150,0.15); color: #ff7096; }
+    .badge-soon   { background: rgba(251,176,64,0.12);  color: #fbb040; }
+    .badge-ok     { background: #1a1a1a; color: #555; }
+
+    /* Empty */
+    .empty-mini {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: #333;
+      letter-spacing: 0.06em;
+      padding: 4px 0;
+    }
+
+    /* Footer */
+    .popup-footer {
+      padding: 12px 18px;
+      border-top: 1px solid #1a1a1a;
+      display: flex;
+      gap: 8px;
+    }
+    .btn-open-app {
+      flex: 1;
+      background: #fff;
+      color: #000;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      padding: 9px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.12s, box-shadow 0.12s;
+      box-shadow: 0 0 16px rgba(255,255,255,0.1);
+    }
+    .btn-open-app:hover { opacity: 0.88; box-shadow: 0 0 24px rgba(255,255,255,0.2); }
+    .btn-dismiss {
+      background: #111;
+      color: #555;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      padding: 9px 14px;
+      border-radius: 6px;
+      border: 1px solid #222;
+      cursor: pointer;
+      transition: color 0.12s, border-color 0.12s;
+    }
+    .btn-dismiss:hover { color: #888; border-color: #333; }
+
+    /* Auto-dismiss bar */
+    .auto-bar {
+      height: 2px;
+      background: #1a1a1a;
+      position: relative;
+      overflow: hidden;
+    }
+    .auto-bar-fill {
+      height: 100%;
+      background: #333;
+      width: 100%;
+      animation: drain 12s linear forwards;
+    }
+    @keyframes drain {
+      from { width: 100%; }
+      to   { width: 0%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="popup">
+    <div class="auto-bar"><div class="auto-bar-fill"></div></div>
+
+    <div class="popup-header">
+      <div class="popup-brand">
+        <span class="brand-mark">G</span>
+        <span class="brand-name">Study Desk</span>
+      </div>
+      <button class="popup-close" onclick="window.electron.send('popup:close')">&#10005;</button>
+    </div>
+
+    <div class="popup-greeting">
+      <div class="greeting-text" id="greetingText"></div>
+      <div class="greeting-sub" id="greetingSub"></div>
+    </div>
+
+    <div class="streak-bar">
+      <span class="streak-val" id="streakVal">0</span>
+      <span class="streak-label">day study streak</span>
+      <span class="progress-mini" id="progressMini">0% syllabus</span>
+    </div>
+
+    <div class="popup-body">
+      <div class="section">
+        <div class="section-title">Today's Focus</div>
+        <div id="focusSection"></div>
+      </div>
+      <div class="section">
+        <div class="section-title">Upcoming Deadlines</div>
+        <div id="deadlineSection"></div>
+      </div>
+    </div>
+
+    <div class="popup-footer">
+      <button class="btn-open-app" onclick="window.electron.send('popup:open-app')">Open Study Desk</button>
+      <button class="btn-dismiss" onclick="window.electron.send('popup:close')">Dismiss</button>
+    </div>
+  </div>
+
+  <script>
+    // ── Read data from localStorage (shared with main app) ──
+    function load(key) {
+      try { return JSON.parse(localStorage.getItem(key)) || null; } catch { return null; }
+    }
+
+    const today = new Date().toISOString().slice(0, 10);
+
+    function getStreak() {
+      const s = load('sd2_streak') || { count: 0 };
+      return s.count || 0;
+    }
+
+    function getOverallProgress() {
+      const subjects = load('sd2_subjects') || [];
+      const total = subjects.reduce((a, s) => a + (s.topics?.length || 0), 0);
+      if (!total) return 0;
+      const done  = subjects.reduce((a, s) => a + (s.topics?.filter(t => t.done).length || 0), 0);
+      return Math.round(done / total * 100);
+    }
+
+    function getFocus() {
+      return (load('sd2_focus') || []).filter(f => f.date === today);
+    }
+
+    function getHomework() {
+      return (load('sd2_homework') || [])
+        .filter(h => !h.done && h.due)
+        .sort((a, b) => new Date(a.due) - new Date(b.due))
+        .slice(0, 4);
+    }
+
+    function daysUntil(isoStr) {
+      const d = new Date(isoStr + 'T00:00:00');
+      const t = new Date(); t.setHours(0,0,0,0);
+      return Math.ceil((d - t) / 86400000);
+    }
+
+    function formatDue(isoStr) {
+      return new Date(isoStr + 'T00:00:00').toLocaleDateString('en-IN', { day:'numeric', month:'short' });
+    }
+
+    function esc(str) {
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    function render() {
+      // Greeting
+      const hour = new Date().getHours();
+      let greet;
+      if      (hour < 5)  greet = 'Up late, Govind?';
+      else if (hour < 12) greet = 'Good morning, Govind.';
+      else if (hour < 17) greet = 'Good afternoon, Govind.';
+      else if (hour < 21) greet = 'Good evening, Govind.';
+      else                greet = 'Late night session?';
+      document.getElementById('greetingText').textContent = greet;
+      document.getElementById('greetingSub').textContent  = new Date().toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long' });
+
+      // Streak + progress
+      document.getElementById('streakVal').textContent    = getStreak();
+      document.getElementById('progressMini').textContent = getOverallProgress() + '% syllabus';
+
+      // Focus
+      const focusItems = getFocus();
+      const focusEl    = document.getElementById('focusSection');
+      if (!focusItems.length) {
+        focusEl.innerHTML = '<div class="empty-mini">Nothing planned yet for today</div>';
+      } else {
+        focusEl.innerHTML = focusItems.map(f =>
+          `<div class="focus-row ${f.done ? 'done' : ''}">
+            <div class="focus-dot"></div>
+            <span>${esc(f.text)}</span>
+          </div>`
+        ).join('');
+      }
+
+      // Deadlines
+      const hwItems   = getHomework();
+      const deadlineEl = document.getElementById('deadlineSection');
+      if (!hwItems.length) {
+        deadlineEl.innerHTML = '<div class="empty-mini">No upcoming deadlines</div>';
+      } else {
+        deadlineEl.innerHTML = hwItems.map(h => {
+          const days = daysUntil(h.due);
+          let cls = 'badge-ok', label = formatDue(h.due);
+          if      (days < 0)   { cls = 'badge-urgent'; label = `${-days}d overdue`; }
+          else if (days === 0) { cls = 'badge-urgent'; label = 'Today'; }
+          else if (days <= 2)  { cls = 'badge-soon';   label = `${days}d left`; }
+          return `<div class="deadline-row">
+            <span class="deadline-name">${esc(h.desc)}</span>
+            <span class="deadline-badge ${cls}">${label}</span>
+          </div>`;
+        }).join('');
+      }
+    }
+
+    render();
+  </script>
+</body>
+</html>
